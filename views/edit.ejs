@@ -1,0 +1,65 @@
+<%-include('./header.ejs')%>
+
+<main class="container py-5">
+  <section class="form-shell mx-auto">
+    <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-edit"></use></svg> Refine the listing</p>
+    <h1 class="mb-2">Edit Movie</h1>
+    <p class="text-muted mb-4">Update the poster, credits, genre tags, and synopsis shown across MovieMeter.</p>
+
+    <form action="/edit/<%=m._id%>?_method=PUT" method="POST">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <label for="movieName" class="form-label">Movie Name</label>
+          <input type="text" value="<%=m.Name%>" name="Name" class="form-control" id="movieName" required>
+        </div>
+
+        <div class="col-md-4">
+          <label for="movieYear" class="form-label">Year</label>
+          <input type="number" value="<%=m.Year%>" name="Year" class="form-control" id="movieYear" required>
+        </div>
+
+        <div class="col-md-4">
+          <label for="movieDuration" class="form-label">Duration</label>
+          <input type="text" value="<%=m.Duration%>" name="Duration" class="form-control" id="movieDuration">
+        </div>
+
+        <div class="col-md-8">
+          <label for="movieImage" class="form-label">Poster URL</label>
+          <input type="text" value="<%=m.Image%>" name="Image" class="form-control" id="movieImage">
+        </div>
+
+        <div class="col-md-12">
+          <label for="movietrailer" class="form-label">Trailer URL</label>
+          <input type="text" value="<%=m.trailer || ''%>" name="trailer" class="form-control" id="movietrailer" placeholder="https://...">
+        </div>
+
+        <div class="col-md-12">
+          <label for="movieImdb" class="form-label">IMDb ID</label>
+          <input type="text" value="<%=m.imdb || ''%>" name="imdb" class="form-control" id="movieImdb" placeholder="e.g., tt1375666">
+        </div>
+
+        <div class="col-md-6">
+          <label for="movieDirector" class="form-label">Director</label>
+          <input type="text" value="<%=m.Director%>" name="Director" class="form-control" id="movieDirector">
+        </div>
+
+        <div class="col-md-6">
+          <label for="movieGenres" class="form-label">Genres</label>
+          <input type="text" value="<%=m.Genres%>" name="Genres" class="form-control" id="movieGenres">
+        </div>
+
+        <div class="col-12">
+          <label for="movieDesc" class="form-label">Description</label>
+          <textarea name="Desc" class="form-control" id="movieDesc" rows="5" required><%=m.Desc%></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <button type="submit" class="btn btn-primary"><svg class="icon"><use href="#icon-edit"></use></svg> Save Changes</button>
+        <a class="btn btn-outline-light" href="/movies/<%=m._id%>">Cancel</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<%-include('./footer.ejs')-%>

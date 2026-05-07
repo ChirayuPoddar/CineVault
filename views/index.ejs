@@ -1,0 +1,208 @@
+<%-include('./header.ejs') %>
+
+
+<% if (featuredMovie) { %>
+<section class="movie-hero">
+<div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2500">
+<div class="carousel-inner">
+<% for(let i = 0; i < featuredMovie.length; i++) { %>
+<% const Movie = featuredMovie[i] %>
+ <% if(!Movie) continue; %>
+<div class="movie-hero carousel-item <%= i === 0 ? 'active' : '' %> gradient-overlay">
+<img src="<%= Movie.Image %>" class="d-block w-100" alt="<%= Movie.Name %> poster">
+<div class="container-fluid px-lg-5">
+<div class="movie-hero-content">
+<p class="eyebrow mb-2"><svg class="icon"><use href="#icon-film"></use></svg> Featured on CineVault</p>
+<h1 class="hero-title mb-3"><%= Movie.Name %></h1>
+<p class="hero-copy mb-4"><%= Movie.Desc %></p>
+<div class="d-flex flex-wrap gap-3 mb-4 text-light">
+<span class="icon-chip"><svg class="icon"><use href="#icon-calendar"></use></svg><%= Movie.Year %></span>
+<span class="icon-chip"><svg class="icon"><use href="#icon-clock"></use></svg><%= Movie.Duration || 'Duration not added' %></span>
+<span class="icon-chip"><svg class="icon"><use href="#icon-star"></use></svg><%= Movie.Genres || 'Genre not added' %></span>
+</div>
+<div class="d-flex flex-wrap gap-2">
+<a href="/movies/<%= Movie._id %>" class="btn btn-primary btn-lg"><svg class="icon"><use href="#icon-play"></use></svg> Watch Details</a>
+<a href="/new" class="btn btn-outline-light btn-lg"><svg class="icon"><use href="#icon-plus"></use></svg> Add Movie</a>
+</div>
+</div>
+</div>
+</div>
+<% } %>
+</div>
+</div>
+</section>
+<% } %>
+
+<main class="container-fluid px-lg-5 pb-5">
+  <section class="metric-strip mb-5">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="stat-tile">
+          <p class="mb-1"><svg class="icon"><use href="#icon-film"></use></svg> Movies in Library</p>
+          <h2 class="mb-0 fw-black"><%= totalMovies %></h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-tile">
+          <p class="mb-1"><svg class="icon"><use href="#icon-message"></use></svg> Community Reviews</p>
+          <h2 class="mb-0 fw-black"><%= totalReviews %></h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-tile">
+          <p class="mb-1"><svg class="icon"><use href="#icon-play"></use></svg> Showing Now</p>
+          <h2 class="mb-0 fw-black"><%= allMovies.length %></h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <% if (typeof q !== 'undefined' && q) { %>
+    <section class="rail-section">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-search"></use></svg> Search</p>
+          <h2>Results for "<%= q %>"</h2>
+        </div>
+        <a href="/" class="btn btn-outline-light btn-sm">Clear Search</a>
+      </div>
+
+      <% if (filterMovies.length === 0) { %>
+        <div class="glass-panel rounded p-4">
+          <p class="mb-0">No movies found.</p>
+        </div>
+      <% } %>
+
+      <div class="catalog-grid">
+        <% for (let movies of filterMovies) { %>
+          <article class="movie-card">
+            <img src="<%= movies.movie.Image %>" class="movie-card-img" alt="<%= movies.movie.Name %> poster">
+            <div class="card-body d-flex flex-column">
+              <h3 class="h5 mb-1"><%= movies.movie.Name %></h3>
+              <p class="text-muted small mb-2"><%= movies.movie.Year %> · <%= movies.movie.Genres || 'Genre not added' %></p>
+              <p class="small mb-2"><svg class="icon"><use href="#icon-clock"></use></svg> <%= movies.movie.Duration || 'Duration not added' %></p>
+              <p class="card-text flex-grow-1"><%= movies.movie.Desc %></p>
+              <p class="small mb-2"><svg class="icon"><use href="#icon-star"></use></svg> <strong><%= movies.avgRating.toFixed(1) %></strong> average · <%= movies.reviewCount %> reviews</p>
+              <p class="starability-result" data-rating="<%= Math.round(movies.avgRating) %>"></p>
+              <a href="/movies/<%= movies.movie._id %>" class="btn btn-primary btn-sm mt-auto"><svg class="icon"><use href="#icon-play"></use></svg> Details</a>
+            </div>
+          </article>
+        <% } %>
+      </div>
+    </section>
+  <% } %>
+
+  <section class="rail-section" id="Trending">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-fire"></use></svg> Trending Now</p>
+        <h2>Top Rated Movies</h2>
+      </div>
+    </div>
+
+    <div class="movie-rail">
+      <% for (let item of trendingMovies) { %>
+        <article class="movie-card">
+          <img src="<%= item.movie.Image %>" class="movie-card-img" alt="<%= item.movie.Name %> poster">
+          <div class="card-body d-flex flex-column">
+            <h3 class="h5 mb-1"><%= item.movie.Name %></h3>
+            <p class="text-muted small mb-2"><%= item.movie.Year %> · <%= item.movie.Genres || 'Genre not added' %></p>
+            <p class="small mb-2"><svg class="icon"><use href="#icon-clock"></use></svg> <%= item.movie.Duration || 'Duration not added' %></p>
+              <p class="card-text flex-grow-1"><%= item.movie.Desc %></p>
+            <p class="small mb-2"><svg class="icon"><use href="#icon-star"></use></svg> <strong><%= item.avgRating.toFixed(1) %></strong> average · <%= item.reviewCount %> reviews</p>
+            <p class="starability-result" data-rating="<%= Math.round(item.avgRating) %>"></p>
+            <a href="/movies/<%= item.movie._id %>" class="btn btn-primary btn-sm mt-auto"><svg class="icon"><use href="#icon-play"></use></svg> Details</a>
+          </div>
+        </article>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="rail-section" id="Latest">
+    <div class="section-title" >
+      <div>
+        <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-plus"></use></svg> New to CineVault</p>
+        <h2>Fresh Picks</h2>
+      </div>
+    </div>
+
+    <div class="movie-rail">
+      <% for (let movie of latestMovies) { %>
+        <article class="movie-card">
+          <img src="<%= movie.movie.Image %>" class="movie-card-img" alt="<%= movie.movie.Name %> poster">
+          <div class="card-body d-flex flex-column">
+            <h3 class="h5 mb-1"><%= movie.movie.Name %></h3>
+            <p class="text-muted small mb-2"><%= movie.movie.Year %> · <%= movie.movie.Genres || 'Genre not added' %></p>
+            <p class="small mb-2"><svg class="icon"><use href="#icon-clock"></use></svg> <%= movie.movie.Duration || 'Duration not added' %></p>
+            <p class="card-text flex-grow-1"><%= movie.movie.Desc %></p>
+            <p class="small mb-2"><svg class="icon"><use href="#icon-star"></use></svg> <strong><%= movie.avgRating.toFixed(1) %></strong> average · <%= movie.reviewCount %> reviews</p>
+            <p class="starability-result" data-rating="<%= Math.round(movie.avgRating) %>"></p>
+            <a href="/movies/<%= movie.movie._id %>" class="btn btn-primary btn-sm mt-auto"><svg class="icon"><use href="#icon-play"></use></svg> Details</a>
+          </div>
+        </article>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="rail-section">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-message"></use></svg> Community Heat</p>
+        <h2>Most Reviewed</h2>
+      </div>
+    </div>
+
+    <div class="list-group">
+      <% for (let item of mostReviewedMovies) { %>
+        <a href="/movies/<%= item.movie._id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <span>
+            <strong><%= item.movie.Name %></strong>
+            <span class="text-muted ms-2"><%= item.movie.Year %></span>
+          </span>
+          <span class="badge text-bg-primary rounded-pill"><svg class="icon"><use href="#icon-message"></use></svg> <%= item.reviewCount %> reviews</span>
+        </a>
+      <% } %>
+    </div>
+  </section>
+
+    <section class="rail-section" id="all">
+      <div class="section-title" >
+        <div>
+          <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-film"></use></svg> Full Library</p>
+          <h2>All Movies</h2>
+        </div>
+      </div>
+
+      <% if (homeMovies.length === 0) { %>
+        <div class="glass-panel rounded p-4">
+          <p class="mb-0">No movies found.</p>
+        </div>
+      <% } %>
+
+      <div class="catalog-grid">
+        <% for (let movies of movieStats) { %>
+          <article class="movie-card">
+            <img src="<%= movies.movie.Image %>" class="movie-card-img" alt="<%= movies.movie.Name %> poster">
+            <div class="card-body d-flex flex-column">
+              <h3 class="h5 mb-1"><%= movies.movie.Name %></h3>
+              
+              <p class="text-muted small mb-2"><%= movies.movie.Year %> · <%= movies.movie.Genres || 'Genre not added' %></p>
+              <p class="small mb-2"><svg class="icon"><use href="#icon-clock"></use></svg> <%= movies.movie.Duration || 'Duration not added' %></p>
+              <p class="card-text flex-grow-1"><%= movies.movie.Desc %></p>
+              <p class="small mb-2"><svg class="icon"><use href="#icon-star"></use></svg> <strong><%= movies.avgRating.toFixed(1) %></strong> average · <%= movies.reviewCount %> reviews</p>
+              <p class="starability-result" data-rating="<%= Math.round(movies.avgRating) %>"></p>
+              <a href="/movies/<%= movies.movie._id %>" class="btn btn-primary btn-sm mt-auto"><svg class="icon"><use href="#icon-play"></use></svg> Details</a>
+            </div>
+          </article>
+        <% } %>
+      </div>
+    </section>
+</main>
+
+<footer class="stream-footer">
+  <div class="container-fluid px-lg-5 d-flex flex-wrap justify-content-between gap-2">
+    <span><svg class="icon"><use href="#icon-film"></use></svg> CineVault</span>
+    <span><svg class="icon"><use href="#icon-star"></use></svg> Curated ratings, reviews, and movie discovery.</span>
+  </div>
+</footer>
+<%-include('./footer.ejs') %>

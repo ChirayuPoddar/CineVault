@@ -1,0 +1,65 @@
+<%-include('./header.ejs')%>
+
+<main class="container py-5">
+  <section class="form-shell mx-auto">
+    <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-plus"></use></svg> Expand the library</p>
+    <h1 class="mb-2">Add New Movie</h1>
+    <p class="text-muted mb-4">Create a polished listing with poster art, genre, credits, and a short description.</p>
+
+    <form action="/create" method="POST">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <label for="movieName" class="form-label">Movie Title*</label>
+          <input type="text" placeholder="Enter movie title" name="Name" class="form-control" id="movieName" required>
+        </div>
+
+        <div class="col-md-4">
+          <label for="movieYear" class="form-label">Year*</label>
+          <input type="number" placeholder="e.g., 2026" name="Year" class="form-control" id="movieYear" required>
+        </div>
+
+        <div class="col-md-4">
+          <label for="movieDuration" class="form-label">Duration</label>
+          <input type="text" placeholder="e.g., 2h 30min" name="Duration" class="form-control" id="movieDuration">
+        </div>
+
+        <div class="col-md-8">
+          <label for="movieImage" class="form-label">Poster URL</label>
+          <input type="text" name="Image" class="form-control" id="movieImage" placeholder="https://...">
+        </div>
+
+        <div class="col-md-12">
+          <label for="movietrailer" class="form-label">Trailer URL</label>
+          <input type="text" name="trailer" class="form-control" id="movietrailer" placeholder="https://...">
+        </div>
+
+        <div class="col-md-12">
+          <label for="movieImdb" class="form-label">IMDb ID</label>
+          <input type="text" name="imdb" class="form-control" id="movieImdb" placeholder="e.g., tt1375666">
+        </div>
+
+        <div class="col-md-6">
+          <label for="movieDirector" class="form-label">Director</label>
+          <input type="text" placeholder="Director name" name="Director" class="form-control" id="movieDirector">
+        </div>
+
+        <div class="col-md-6">
+          <label for="movieGenres" class="form-label">Genres</label>
+          <input type="text" placeholder="e.g., Sci-Fi, Drama" name="Genres" class="form-control" id="movieGenres">
+        </div>
+
+        <div class="col-12">
+          <label for="movieDesc" class="form-label">Description*</label>
+          <textarea placeholder="Enter movie description" name="Desc" class="form-control" id="movieDesc" rows="5" required></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <button type="submit" class="btn btn-primary"><svg class="icon"><use href="#icon-plus"></use></svg> Add Movie</button>
+        <a class="btn btn-outline-light" href="/">Cancel</a>
+      </div>
+    </form>
+  </section>
+</main>
+
+<%-include('./footer.ejs')-%>

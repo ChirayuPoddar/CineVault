@@ -1,0 +1,131 @@
+<%-include('./header.ejs')%>
+
+<%
+  let sum = 0;
+  let cnt = 0;
+
+  for (let cmt of m.Reviews) {
+    sum += Number(cmt.rating);
+    cnt++;
+  }
+
+  const avgRating = cnt ? sum / cnt : 0;
+  const displayRating = Math.round(avgRating);
+%>
+
+
+<% if (typeof trailer !== 'undefined' && trailer) { %>
+    <section class="trailer-stage">
+      <a class="btn action-btn action-btn-secondary trailer-close" href="/movies/<%=m._id%>">Close</a>
+      <iframe class="trailer-frame" src="<%= trailer %>" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </section>
+<% } 
+else{%>
+  <section class="detail-hero">
+  <img src="<%= m.Image %>" class="detail-backdrop" alt="<%= m.Name %> poster">
+  <div class="container-fluid px-lg-5 py-5 detail-content">
+    <div class="row align-items-end g-5 py-lg-5">
+      <div class="col-md-auto">
+        <img src="<%= m.Image %>" class="detail-poster" alt="<%= m.Name %> poster">
+      </div>
+      <div class="col-md-8 col-xl-6">
+        <p class="eyebrow mb-2"><svg class="icon"><use href="#icon-film"></use></svg> Movie Details</p>
+        <h1 class="hero-title mb-3"><%= m.Name %></h1>
+        <div class="d-flex flex-wrap gap-3 mb-3 text-light">
+          <span class="icon-chip"><svg class="icon"><use href="#icon-calendar"></use></svg><%= m.Year %></span>
+          <span class="icon-chip"><svg class="icon"><use href="#icon-clock"></use></svg><%= m.Duration || 'Duration not added' %></span>
+          <span class="icon-chip"><svg class="icon"><use href="#icon-star"></use></svg><%= m.Genres || 'Genre not added' %></span>
+        </div>
+        <p class="hero-copy"><%= m.Desc %></p>
+        <p class="mb-1"><svg class="icon"><use href="#icon-user"></use></svg> <strong>Director:</strong> <%= m.Director || 'Not added' %></p>
+        <div class="d-flex flex-wrap align-items-center gap-3 my-4">
+          <div>
+            <p class="mb-1 fw-bold"><svg class="icon"><use href="#icon-star"></use></svg> Average Rating: <%= avgRating.toFixed(1) %></p>
+            <p class="starability-result" data-rating="<%= displayRating %>"></p>
+          </div>
+          <span class="badge text-bg-primary rounded-pill"><svg class="icon"><use href="#icon-message"></use></svg> <%= cnt %> reviews</span>
+        </div>
+        <div class="detail-actions">
+          <% if (m.imdb) { %>
+            <a href="/watch/<%=m._id%>" class="btn action-btn action-btn-watch"><svg class="icon"><use href="#icon-play"></use></svg> Watch Movie</a>
+          <% } %>
+          <% if (m.trailer) { %>
+            <a href="/trailer/<%=m._id%>" class="btn action-btn action-btn-trailer"><svg class="icon"><use href="#icon-all"></use></svg> Trailer</a>
+          <% } %>
+          <a href="/summary/<%=m._id%>" class="btn action-btn action-btn-summary"><svg class="icon"><use href="#icon-message"></use></svg> AI Summary</a>
+          <a href="/edit/<%=m._id%>" class="btn action-btn action-btn-edit"><svg class="icon"><use href="#icon-edit"></use></svg> Edit</a>
+          <form action="/movie/delete/<%=m._id%>?_method=DELETE" method="POST">
+            <button type="submit" class="btn action-btn action-btn-delete"><svg class="icon"><use href="#icon-trash"></use></svg> Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+<% if (typeof k !== 'undefined' && k) { %>
+        <div class="container-fluid ai-summary-panel">
+          <%= k %>
+        </div>
+      <% } %>  
+  </div>
+  </div>
+</section>  
+  <%}%> 
+
+
+
+
+
+<main class="container-fluid px-lg-5 py-5">
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <section class="form-shell">
+        <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-star"></use></svg> Your take</p>
+        <h2 class="mb-4">Rate this movie</h2>
+        <form action="/rating/<%=m._id%>" method="POST">
+          <fieldset class="starability-basic">
+            <legend>Add your rating:</legend>
+            <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="rating" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="rating" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="rating" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="rating" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="rating" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+          <div class="form-floating mb-3">
+            <textarea class="form-control comment-field" name="Comment" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+            <label for="floatingTextarea">Comments</label>
+          </div>
+          <button class="btn btn-primary" type="submit"><svg class="icon"><use href="#icon-star"></use></svg> Submit Rating</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="col-lg-7">
+      <section class="glass-panel rounded p-4">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow mb-1"><svg class="icon"><use href="#icon-message"></use></svg> Audience</p>
+            <h2>Reviews</h2>
+          </div>
+        </div>
+
+        <% if (m.Reviews.length === 0) { %>
+          <p class="text-muted mb-0">No reviews yet.</p>
+        <% } %>
+
+        <% for (let cmt of m.Reviews) { %>
+          <div class="review-card mb-3">
+            <p class="starability-result" data-rating="<%= cmt.rating %>"></p>
+            <p class="mb-0"><%= cmt.Comment || 'No comment added.' %></p>
+          </div>
+        <% } %>
+      </section>
+    </div>
+  </div>
+</main>
+
+<%-include('./footer.ejs')%>
